@@ -40,3 +40,6 @@
 .book-host .leaf.cover .cover-ribbon{background:#d1aa73;color:#604031;box-shadow:0 5px 13px rgba(45,23,14,.36)}
 @media(max-width:650px){.book-host{transform:rotate(-2deg) translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){.book-host{transition:none}}
+
+/* Avoid a one-frame stack of unpositioned leaves while the flip engine initializes. */
+.book-host:not(.book-ready) .leaf{visibility:hidden}

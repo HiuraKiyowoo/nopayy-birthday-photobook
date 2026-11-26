@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { createBook } from '@openpageflip/core';
 import '@openpageflip/core/styles.css';
 
@@ -17,14 +17,35 @@ function Leaf({ children, className = '', hard = false }) {
   return <article className={`leaf ${className}`} data-density={hard ? 'hard' : 'soft'}>{children}</article>;
 }
 
+const BookControls = forwardRef(function BookControls({ bookRef, spreads }, ref) {
+  const [opened, setOpened] = useState(false);
+  const [page, setPage] = useState(0);
+  useImperativeHandle(ref, () => ({
+    setPage(current) { setPage(current); if (current > 0) setOpened(true); },
+  }), []);
+  const start = () => { setOpened(true); bookRef.current?.flipNext(); };
+  const previous = () => bookRef.current?.flipPrev();
+  const next = () => bookRef.current?.flipNext();
+  const spread = Math.min(spreads, Math.max(1, Math.ceil(page / 2)));
+
+  return <>
+    <nav className="controls" aria-label="Navigasi halaman">
+    {!opened ? <button className="start-button" onClick={start}>Buka ceritanya <span>→</span></button> : <>
+      <button className="nav-arrow" onClick={previous} disabled={page <= 0} aria-label="Spread sebelumnya">←</button>
+      <div className="progress"><div className="progress-label"><span>SPREAD {String(spread).padStart(2,'0')}</span><span>{String(spreads).padStart(2,'0')}</span></div><div className="progress-track"><span style={{width:`${spread / spreads * 100}%`}}/></div><div className="progress-caption">{spread === spreads ? 'The end, for now' : 'Two pages, one little story'}</div></div>
+      <button className="nav-arrow" onClick={next} disabled={page >= 7} aria-label="Spread berikutnya">→</button>
+    </>}
+    </nav>
+    <footer className="hint">{opened ? 'DRAG A CORNER OR SWIPE TO TURN' : 'A STORY MADE JUST FOR YOU'} <span>·</span> JIHAN ADIRA</footer>
+  </>;
+});
+
 function App() {
   const host = useRef(null);
   const book = useRef(null);
-  const settleTimer = useRef(null);
-  const [opened, setOpened] = useState(false);
-  const [page, setPage] = useState(0);
+  const controls = useRef(null);
   const spreads = 4;
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!host.current) return;
     const instance = createBook(host.current, {
       width: 400, height: 560, size: 'stretch', layout: 'spread', cover: true,
@@ -33,27 +54,22 @@ function App() {
     });
     book.current = instance;
     const onFlip = ({ page: current }) => {
-      if (settleTimer.current) clearTimeout(settleTimer.current);
-      // Let OpenPageFlip finish its landing/reset render before React updates the controls.
-      settleTimer.current = setTimeout(() => {
-        setPage(current);
-        if (current > 0) setOpened(true);
-        settleTimer.current = null;
-      }, 80);
+      // OpenPageFlip emits this after its landing render. Only the small controls rerender.
+      controls.current?.setPage(current);
     };
     instance.on('flip', onFlip);
-    instance.on('init', ({ page: current }) => setPage(current));
+    const onInit = ({ page: current }) => {
+      host.current?.classList.add('book-ready');
+      controls.current?.setPage(current);
+    };
+    instance.on('init', onInit);
     const onKey = e => {
       if (e.key === 'ArrowRight') { e.preventDefault(); instance.flipNext(); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); instance.flipPrev(); }
     };
     window.addEventListener('keydown', onKey);
-    return () => { window.removeEventListener('keydown', onKey); instance.off('flip', onFlip); if (settleTimer.current) clearTimeout(settleTimer.current); instance.destroy(); book.current = null; };
+    return () => { window.removeEventListener('keydown', onKey); instance.off('flip', onFlip); instance.off('init', onInit); instance.destroy(); book.current = null; };
   }, []);
-  const start = useCallback(() => { setOpened(true); book.current?.flipNext(); }, []);
-  const previous = useCallback(() => { book.current?.flipPrev(); }, []);
-  const next = useCallback(() => { book.current?.flipNext(); }, []);
-  const spread = Math.min(spreads, Math.max(1, Math.ceil(page / 2)));
 
   return <main className="scene">
     <div className="ambient"><span className="ambient-star">✦</span><span className="ambient-note">A little book of us</span><span className="ambient-date">MADE WITH LOVE · 2026</span></div>
@@ -81,14 +97,7 @@ function App() {
       </Leaf>
       <Leaf className="back-cover" hard><div className="back-mark">J <span>✦</span></div><p>THE END, FOR NOW</p></Leaf>
     </div>
-    <nav className="controls" aria-label="Navigasi halaman">
-      {!opened ? <button className="start-button" onClick={start}>Buka ceritanya <span>→</span></button> : <>
-        <button className="nav-arrow" onClick={previous} disabled={page <= 0} aria-label="Spread sebelumnya">←</button>
-        <div className="progress"><div className="progress-label"><span>SPREAD {String(spread).padStart(2,'0')}</span><span>{String(spreads).padStart(2,'0')}</span></div><div className="progress-track"><span style={{width:`${spread / spreads * 100}%`}}/></div><div className="progress-caption">{spread === spreads ? 'The end, for now' : 'Two pages, one little story'}</div></div>
-        <button className="nav-arrow" onClick={next} disabled={page >= 7} aria-label="Spread berikutnya">→</button>
-      </>}
-    </nav>
-    <footer className="hint">{opened ? 'DRAG A CORNER OR SWIPE TO TURN' : 'A STORY MADE JUST FOR YOU'} <span>·</span> JIHAN ADIRA</footer>
+    <BookControls ref={controls} bookRef={book} spreads={spreads} />
   </main>;
 }
 export default App;
