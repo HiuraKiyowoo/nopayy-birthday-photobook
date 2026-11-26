@@ -65,7 +65,7 @@ function App() {
     if (next === index) return;
     setDirection(step > 0 ? 'next' : 'prev');
     setTurning(true);
-    window.setTimeout(() => { setIndex(next); setTurning(false); }, 520);
+    window.setTimeout(() => { setIndex(next); setTurning(false); }, 780);
   }, [index, started, turning]);
   useEffect(() => {
     const key = e => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); };
@@ -89,8 +89,12 @@ function App() {
           <div className="cover-center"><span className="cover-flower">✿</span><p className="cover-pretitle">to my favorite person</p><h1>Happy Birthday<br/><i>Nopayy!</i></h1><p className="cover-sub">A little book of memories<br/>and all my love.</p></div>
           <div className="cover-bottom"><span>CHAPTER ONE</span><span>2026</span></div><div className="cover-ribbon">N</div>
         </div> : <div className="spread page-content" key={index}>
-          <Leaf page={current.left} number={index === 0 ? 1 : index * 2 + 1} side="left-leaf"/>
-          <Leaf page={current.right} number={index === 0 ? 2 : index * 2 + 2} side="right-leaf"/>
+          <Leaf page={current.left} number={index * 2 + 1} side="left-leaf"/>
+          <Leaf page={current.right} number={index * 2 + 2} side="right-leaf"/>
+          {turning && <div className={`flip-sheet ${direction === 'next' ? 'flip-forward' : 'flip-backward'}`}>
+            <div className="flip-face flip-front"><Leaf page={direction === 'next' ? current.right : current.left} number={direction === 'next' ? index * 2 + 2 : index * 2 + 1} side={direction === 'next' ? 'right-leaf' : 'left-leaf'}/></div>
+            <div className="flip-face flip-back"><Leaf page={direction === 'next' ? spreads[index + 1].left : spreads[index - 1].right} number={direction === 'next' ? (index + 1) * 2 + 1 : (index - 1) * 2 + 2} side={direction === 'next' ? 'left-leaf' : 'right-leaf'}/></div>
+          </div>}
           <span className="spine-shadow"/>
         </div>}
       </div>
