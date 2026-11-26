@@ -20,6 +20,7 @@ function Leaf({ children, className = '', hard = false }) {
 function App() {
   const host = useRef(null);
   const book = useRef(null);
+  const settleTimer = useRef(null);
   const [opened, setOpened] = useState(false);
   const [page, setPage] = useState(0);
   const spreads = 4;
@@ -31,7 +32,15 @@ function App() {
       drag: true, hover: true, click: 'edges', shadows: true, shadowOpacity: 0.58,
     });
     book.current = instance;
-    const onFlip = ({ page: current }) => { setPage(current); if (current > 0) setOpened(true); };
+    const onFlip = ({ page: current }) => {
+      if (settleTimer.current) clearTimeout(settleTimer.current);
+      // Let OpenPageFlip finish its landing/reset render before React updates the controls.
+      settleTimer.current = setTimeout(() => {
+        setPage(current);
+        if (current > 0) setOpened(true);
+        settleTimer.current = null;
+      }, 80);
+    };
     instance.on('flip', onFlip);
     instance.on('init', ({ page: current }) => setPage(current));
     const onKey = e => {
@@ -39,7 +48,7 @@ function App() {
       if (e.key === 'ArrowLeft') { e.preventDefault(); instance.flipPrev(); }
     };
     window.addEventListener('keydown', onKey);
-    return () => { window.removeEventListener('keydown', onKey); instance.off('flip', onFlip); instance.destroy(); book.current = null; };
+    return () => { window.removeEventListener('keydown', onKey); instance.off('flip', onFlip); if (settleTimer.current) clearTimeout(settleTimer.current); instance.destroy(); book.current = null; };
   }, []);
   const start = useCallback(() => { setOpened(true); book.current?.flipNext(); }, []);
   const previous = useCallback(() => { book.current?.flipPrev(); }, []);
