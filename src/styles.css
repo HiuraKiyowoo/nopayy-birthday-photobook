@@ -18,3 +18,6 @@
 /* Clamp the spread as a single 10:7 book; each half is always a 5:7 portrait page. */
 .book-host{width:min(930px,88vw,calc(61vh * 1.428571));height:auto;aspect-ratio:10/7}
 @media(max-width:650px){.book-host{width:min(94vw,calc(66svh * 1.428571));height:auto;aspect-ratio:10/7}}
+/* Jihan edition: handwritten closing at lower right and reusable photo collages. */
+.page-letter .signature-right{position:absolute;right:36px;bottom:25px;margin:0;text-align:right}.wish-ornament{height:235px;display:grid;place-items:center;color:#d2ac79;font:100px 'Playfair Display',serif;text-shadow:0 8px 18px #6b405020}.memory-collage[data-count="3"]{grid-template-rows:1fr 1fr}.memory-collage[data-count="3"] .memory-tile:nth-child(3){grid-column:1 / -1;width:58%;justify-self:center;margin:0;transform:rotate(-1deg)}
+@media(max-width:650px){.page-letter .signature-right{right:14px;bottom:16px}.wish-ornament{height:clamp(100px,30vw,160px);font-size:76px}.memory-collage[data-count="3"] .memory-tile:nth-child(3){width:62%}}
