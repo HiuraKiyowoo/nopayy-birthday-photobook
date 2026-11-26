@@ -25,3 +25,18 @@
 .scene{background-color:#493222;background-image:radial-gradient(ellipse at 50% 43%,rgba(207,161,113,.2) 0%,rgba(135,91,57,.08) 37%,transparent 68%),repeating-linear-gradient(0deg,transparent 0 184px,rgba(25,14,9,.34) 185px,rgba(25,14,9,.34) 187px,rgba(211,165,117,.08) 188px,transparent 190px 372px),repeating-linear-gradient(0deg,rgba(255,225,184,.035) 0 2px,transparent 3px 19px,rgba(24,13,8,.06) 21px 23px,transparent 24px 43px),linear-gradient(110deg,#38251a 0%,#69482f 26%,#503523 54%,#735037 78%,#3b261a 100%)}.scene:before{opacity:.13;mix-blend-mode:soft-light}.scene:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(15,9,6,.14),transparent 28%,transparent 76%,rgba(15,9,6,.24)),radial-gradient(ellipse at 50% 65%,transparent 32%,rgba(18,10,6,.24) 100%)}.book-host:before{content:"";position:absolute;left:9%;right:9%;bottom:-24px;height:42px;z-index:-1;pointer-events:none;background:radial-gradient(ellipse,rgba(15,8,5,.58),transparent 72%);filter:blur(7px)}
 /* Photographic tabletop backdrop, with the CSS wood grain retained as a robust fallback. */
 .scene{background-color:#493222;background-image:linear-gradient(180deg,rgba(20,12,8,.15),rgba(20,12,8,.24)),url('/assets/walnut-tabletop.jpg'),radial-gradient(ellipse at 50% 43%,rgba(207,161,113,.2) 0%,rgba(135,91,57,.08) 37%,transparent 68%),repeating-linear-gradient(0deg,transparent 0 184px,rgba(25,14,9,.34) 185px,rgba(25,14,9,.34) 187px,rgba(211,165,117,.08) 188px,transparent 190px 372px),repeating-linear-gradient(0deg,rgba(255,225,184,.035) 0 2px,transparent 3px 19px,rgba(24,13,8,.06) 21px 23px,transparent 24px 43px),linear-gradient(110deg,#38251a 0%,#69482f 26%,#503523 54%,#735037 78%,#3b261a 100%);background-position:center;background-size:cover}
+
+/* User's warm still-life reference: desk, keepsakes, and soft afternoon light. */
+.scene{background-color:#70452f;background-image:linear-gradient(180deg,rgba(62,34,20,.08),rgba(71,39,23,.14)),url('/assets/warm-desk-reference.png');background-position:center center;background-size:cover}
+.scene:after{background:linear-gradient(180deg,rgba(70,37,20,.08),transparent 28%,transparent 76%,rgba(55,29,16,.16)),radial-gradient(ellipse at 50% 55%,transparent 36%,rgba(52,27,14,.18) 100%)}
+.book-host{transform:rotate(-1.15deg) translateY(-3px);filter:drop-shadow(0 23px 18px rgba(49,26,15,.38)) drop-shadow(0 3px 6px rgba(41,22,13,.24));transition:transform .35s ease,filter .35s ease}
+.book-host .leaf.cover{background:linear-gradient(145deg,#96664b 0%,#80523e 39%,#694132 72%,#583528 100%);border-color:#d1aa73;box-shadow:inset 9px 0 20px rgba(54,29,18,.34),inset 0 0 0 7px rgba(255,232,196,.055),inset 0 0 0 8px rgba(214,177,122,.62),inset 0 1px 0 rgba(255,240,214,.45),0 4px 12px rgba(53,28,17,.16);color:#fff4e4}
+.book-host .leaf.cover:after{border-color:rgba(245,218,177,.46)}
+.book-host .leaf.cover .cover-top,.book-host .leaf.cover .cover-bottom{color:#ead3b3}
+.book-host .leaf.cover .cover-top span,.book-host .leaf.cover .cover-flower{color:#e7c38b}
+.book-host .leaf.cover h1{color:#fff5e8;text-shadow:0 2px 8px rgba(62,34,22,.2)}
+.book-host .leaf.cover h1 i{color:#f0d0a0}
+.book-host .leaf.cover .cover-pretitle,.book-host .leaf.cover .cover-sub{color:#f0dcc5}
+.book-host .leaf.cover .cover-ribbon{background:#d1aa73;color:#604031;box-shadow:0 5px 13px rgba(45,23,14,.36)}
+@media(max-width:650px){.book-host{transform:rotate(-.65deg) translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){.book-host{transition:none}}
