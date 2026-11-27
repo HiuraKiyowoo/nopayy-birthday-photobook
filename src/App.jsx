@@ -75,9 +75,7 @@ function App() {
     <div className="ambient"><span className="ambient-star">✦</span><span className="ambient-note">A little book of us</span><span className="ambient-date">MADE WITH LOVE · 2026</span></div>
     <div className="book-host" ref={host} aria-label="Photobook ulang tahun Jihan Adira">
       <Leaf className="cover" hard>
-        <div className="cover-top">A KEEPSAKE FOR YOU <span>✦</span></div>
-        <div className="cover-center"><span className="cover-flower">✿</span><p className="cover-pretitle">to my favorite person</p><h1>Happy Birthday<br/><i>Jihan Adira!</i></h1><p className="cover-sub">A little book of memories<br/>and all my love.</p></div>
-        <div className="cover-bottom"><span>CHAPTER ONE</span><span>2026</span></div><div className="cover-ribbon">JA</div>
+        <img className="cover-art" src="/assets/jihan-cover.png" alt="Sampul buku Happy Birthday Jihan Adira" />
       </Leaf>
       <Leaf className="page-letter">
         <p className="eyebrow">A NOTE FOR YOUR DAY <span>✦</span></p><h2 className="letter-title">For<br/><i>Jihan</i></h2>
